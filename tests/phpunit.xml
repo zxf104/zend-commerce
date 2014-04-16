@@ -1,0 +1,14 @@
+<phpunit bootstrap="./Bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Zend Commerce Test Suite">
+            <directory>./ZendCommerceTest/Billing</directory>
+            <directory>./ZendCommerceTest/Common</directory>
+            <directory>./ZendCommerceTest/Email</directory>
+            <directory>./ZendCommerceTest/File</directory>
+            <directory>./ZendCommerceTest/Licensing</directory>
+            <directory>./ZendCommerceTest/Shipping</directory>
+            <directory>./ZendCommerceTest/Store</directory>
+            <directory>./ZendCommerceTest/User</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
