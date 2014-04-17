@@ -9,8 +9,17 @@
 
 return array(
     'router' => array(
-        'routes' => array(            
-            
+        'routes' => array(
+            'cart' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/cart',
+                    'defaults' => array(
+                        'controller' => 'ZendCommerce\Store\Controller\Cart',
+                        'action' => 'index',
+                    ),
+                ),
+            ),            
         ),
     ),
     'service_manager' => array(        

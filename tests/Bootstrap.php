@@ -42,7 +42,7 @@ if (! isset($loader)) {
 $zendLoader = new \Zend\Loader\StandardAutoloader(
     array(
         \Zend\Loader\StandardAutoloader::LOAD_NS => array(
-            'ZendCommerce' => __DIR__ . '/../src',
+            'ZendCommerce' => __DIR__ . '/../src/ZendCommerce',
             'ZendCommerceTest' => __DIR__ . '/ZendCommerceTest'
         ),
     )
