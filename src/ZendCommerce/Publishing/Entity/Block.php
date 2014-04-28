@@ -9,9 +9,9 @@ use League\Flysystem\File;
 
 /**
  *  @ORM\Entity
- *  @ORM\Table(name="pages")
+ *  @ORM\Table(name="blocks")
  */
-class Page{
+class Block{
 
     /**
      * @ORM\Id
@@ -22,9 +22,9 @@ class Page{
 
     /**
      * @ORM\Column(type="string")
-     * @var  string  $path
+     * @var  string  $identifier
      */
-    protected $path;
+    protected $identifier;
 
     /**
      * @ORM\Column(type="text")
@@ -35,15 +35,15 @@ class Page{
     /*
      * @return string
      */
-    public function getPath(){
-        return $this->path;
+    public function getIdentifier(){
+        return $this->identifier;
     }
 
     /*
      * @return string
      */
-    public function setPath($path){
-        $this->path = $path;
+    public function setIdentifier($id){
+        $this->identifier = $id;
         return $this;
     }
 

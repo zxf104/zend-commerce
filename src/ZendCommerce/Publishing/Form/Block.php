@@ -8,7 +8,7 @@ use Zend\Form\Form;
 use Zend\Form\Element;
 use \ZendCommerce\Publishing\Entity\Page as PaginaObject;
 
-class Page extends Form{
+class Block extends Form{
 
     /**
      * @var \Doctrine\ORM\EntityManager;
@@ -23,7 +23,7 @@ class Page extends Form{
 
     public function init(){
 
-        parent::__construct('page');
+        parent::__construct('block');
 
         $objectManager = $this->getObjectManager();
 
@@ -38,9 +38,9 @@ class Page extends Form{
 
         $this->add(array(
             'type'    => 'Zend\Form\Element\Text',
-            'name'    => 'path',
+            'name'    => 'name',
             'options' => array(
-                'label' => 'URL'
+                'label' => 'Nome do bloco'
             )
         ));
 

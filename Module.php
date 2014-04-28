@@ -2,11 +2,12 @@
 
 namespace ZendCommerce;
 
-use Zend\EventManager\EventInterface;
+use Zend\Loader;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ModuleManager\Feature;
-use Zend\Loader;
+use Zend\EventManager\EventInterface;
+use ZendCommerce\Common\Event\FormEvent;
 
 class Module
 {
@@ -36,31 +37,51 @@ class Module
         $moduleRouteListener->attach($eventManager);
         $app = $e->getParam('application');
         $em  = $app->getEventManager();
-
+                
+        
+        
         $em->attach(MvcEvent::EVENT_DISPATCH, array($this, 'selectLayoutBasedOnRoute'));
-
-
-        $sem = \Zend\EventManager\StaticEventManager::getInstance();
-        $sl = $e->getApplication->
-
-        /**
-         * Create
-         */
-        $sem->attach('ZendCommerce\Common\Service\FormManager', 'validate.post', function($ev) use ($sl){
-
-            $form = $ev->getParam('form');  // Form object
-            // add Role 'User' after registration
-            $objectManager = $e->getApplication()->getServiceManager()->get('Doctrine\ORM\EntityManager');
-            $role = $objectManager->getRepository('Application\Entity\Role')->findBy(array('roleId' => 'User'));
-            $user->addRoles(new \Doctrine\Common\Collections\ArrayCollection($role));
-            $objectManager->flush();
-
-        });
+        $em->attach(MvcEvent::EVENT_FINISH, array($this, 'insertContentBlocks');
+        
+            
+        $sem = \Zend\EventManager\StaticEventManager::getInstance();        
+        $sem->attach('ZendCommerce\Common\Service\FormManager', 'ZendCommerce\Common\Event\FormEvent', array($this, 'setUserRole'));       
 
     }
 
 
 
+    
+    /**
+     * Add User Role for users after its registration
+     *
+     * @param  FormEvent $e
+     * @return void
+     */
+    public function setUserRole(FormEvent $e)
+    {
+            $form = $ev->getParam('form');  // Form object
+            $entity = $ev->getParam('entity');
+            if ($entity instanceof \ZendCommerce\User\Entity\User){
+                // add Role 'User' after registration
+                $objectManager = $e->getApplication()->getServiceManager()->get('Doctrine\ORM\EntityManager');
+                $role = $objectManager->getRepository('\ZendCommerce\User\Entity\Role')->findBy(array('roleId' => 'User'));
+                $user->addRoles(new \Doctrine\Common\Collections\ArrayCollection($role));
+                $objectManager->flush();                
+            }            
+            
+    }
+        
+    /**
+    * @toDo Set content blocs on render    
+    */
+    public function setContentBlocks(MvcEvent $e){
+        
+        
+                
+    }
+                    
+                    
     /**
      * Select the admin layout based on route name
      *

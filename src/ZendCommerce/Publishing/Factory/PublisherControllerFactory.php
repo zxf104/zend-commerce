@@ -8,7 +8,7 @@ class PublisherControllerFactory implements FactoryInterface{
 
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $sl){
 
-        $controller = new \Publishing\Controller\Publisher($sl);
+        $controller = new \ZendCommerce\Publishing\Controller\Publisher($sl);
         return $controller;
 
 

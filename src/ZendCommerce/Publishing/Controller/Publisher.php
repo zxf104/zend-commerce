@@ -20,7 +20,9 @@ class Publisher extends AbstractActionController{
     /**
      * @var \Doctrine\ORM\EntityRepository
      */
-    protected $repository;
+    protected $pageRepository;
+
+    protected $blockRepository;
 
     /*
      * resolve all dependencies

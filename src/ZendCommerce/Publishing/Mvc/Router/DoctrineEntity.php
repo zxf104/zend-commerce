@@ -13,37 +13,17 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class DoctrineEntity implements RouteInterface, ServiceLocatorAwareInterface{
 
 
-    protected $defaults = array();
+    protected $config = array();
 
     protected $routePluginManager = null;
-
-    /**
-     * Set service locator
-     *
-     * @param ServiceLocatorInterface $routePluginManager
-     */
-    public function setServiceLocator(ServiceLocatorInterface $routePluginManager)
-    {
-        $this->routePluginManager = $routePluginManager;
-    }
-
-    /**
-     * Get service locator
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->routePluginManager;
-    }
 
 
     /**
      * Create a new page route.
      */
-    public function __construct($defaults = array())
+    public function __construct($config = array())
     {
-        $this->defaults = $defaults;
+        $this->config = $config;
     }
 
 
@@ -121,6 +101,27 @@ class DoctrineEntity implements RouteInterface, ServiceLocatorAwareInterface{
     public function getAssembledParams()
     {
         return array('slug');
+    }
+
+
+    /**
+     * Set service locator
+     *
+     * @param ServiceLocatorInterface $routePluginManager
+     */
+    public function setServiceLocator(ServiceLocatorInterface $routePluginManager)
+    {
+        $this->routePluginManager = $routePluginManager;
+    }
+
+    /**
+     * Get service locator
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->routePluginManager;
     }
 
 

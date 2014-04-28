@@ -12,10 +12,8 @@ class PaginaRepositoryFactory implements FactoryInterface{
         $config = $sl->get('Config');
         $entity = $config['Publishing']['entity'];
         return $em->getRepository($entity);
-
     }
 
 }
-
 
 ?>

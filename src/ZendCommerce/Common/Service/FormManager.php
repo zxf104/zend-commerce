@@ -9,98 +9,87 @@ use Zend\EventManager\EventManagerAwareInterface;
 use Zend\Mvc\Controller\Plugin\PluginInterface;
 use Zend\Stdlib\DispatchableInterface;
 use Zend\View\Model\ViewModel;
+use ZendCommerce\Commom\Event\FormEvent;
 
-class FormManager implements PluginInterface, EventManagerAwareInterface{
-
-    protected $template = 'presentation/form/template';
-
+class FormManager implements EventManagerAwareInterface{
+        
     /**
      * @var
      */
     protected $events;
 
     /**
-     * @var \Zend\Stdlib\DispatchableInterface;
-     */
-    protected $controller;
-
-    /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
 
     public function __construct(\Doctrine\ORM\EntityManager $em){
         $this->entityManager = $em;
     }
 
-    /**
-     * @param \Zend\Mvc\Controller\AbstractActionController $controller
-     * @param \ZendCommerce\Common\Model\FormOperation $backEndForm
-     * @return \Zend\View\Model\ViewModel $layoutModel
+    /**     
+     * @param \ZendCommerce\Commom\Event\FormEvent $formEvent
+     * @return \Zend\View\Model\ViewModel $viewModel
      */
-    public function process(\Zend\Mvc\Controller\AbstractActionController $controller, \ZendCommerce\Common\Model\FormOperation $backEndForm){
-
-
+    public function process(\ZendCommerce\Common\Event\FormEvent $formEvent){
+        
         $viewModel = new ViewModel();
-        $form = $backEndForm->form;
-        $id = $controller->params('id', null);
-        $repository = $backEndForm->repository;
-        if (!empty($id)){
-            if (method_exists($repository, 'find')){
-                $entity = $repository->find($id);
+        $entity = $formEvent->getEntity();
+        $form = $formEvent->getForm();
+        $id = $formEvent->getEntityId();
+        $repository = $formEvent->getRepository();
+        $filter = $formEvent->getFilter();
+        $hydrator = $formEvent->getHydrator();
+        $postData = $form->getPostData();
+        $entityClass = $formEvent->getEntityClass();       
+        
+        
+        if (!$entity){
+            if (!empty($id)){
+                if (method_exists($repository, 'find')){
+                    $entity = $repository->find($id);
+                    if ($entity === false ) throw new \Exception('Entity not found');
 
-                if ($entity === false ) throw new \Exception('Entity not found');
-
-            } else {
-                throw new \Exception('Repository does not support \'find\' method');
-            }
-        } else {
-            $entity = new $backEndForm->entity();
-        }
-        $form->init();
-        $form->setHydrator($backEndForm->hydrator);
-        $filter = $backEndForm->filter;
-        $form->setInputFilter($filter);
-        $form->bind($entity);
-        if($controller->params()->isPost()){
-            $form->setData($controller->params()->fromPost());
-            $this->trigger('validate.pre',array('class' => get_class($entity),'entity' => $entity, 'form' => $form));
-            if ($form->isValid()){
-                $this->trigger('validate.post', array('class' => get_class($form->getObject()),'entity' => $entity, 'form' => $form));
-                $validatedEntity = $form->getObject();
-                $this->entityManager->persist($validatedEntity);
-                $this->entityManager->flush();
-                $controller->flashMessenger()->addSuccessMessage('Informações atualizadas com sucesso!');
-                if ($backEndForm->redirectUrl != null){
-                    if (is_callable($backEndForm->redirectUrl)){
-                        krumo(call_user_func($backEndForm->redirectUrl, $validatedEntity));
-                        $backEndForm->redirectUrl = call_user_func($backEndForm->redirectUrl, $validatedEntity);
-                        $url = $backEndForm->redirectUrl;
-                        $controller->redirect()->toUrl($url);
-                    }
+                } else {
+                    throw new \Exception('Repository does not support \'find\' method');
                 }
             } else {
-                $this->trigger('invalid', array('class' => get_class($entity),'entity' => $entity, 'form' => $form));
+            
+                if (!$entityClass){
+                    throw new \Exception('Undefined Entity Class');
+                }            
+            $entity = new {$entityClass};
+            }
+        } 
+        $form->init();
+        $form->setHydrator($hydrator);        
+        $form->setInputFilter($filter);
+        $form->bind($entity);
+        
+        
+        if(count($postData) > 0){
+            $form->setData($postData);
+            $this->trigger($formEvent::EVENT_VALIDATE_PRE, $formEvent);
+            if ($form->isValid()){
+                $validatedEntity = $form->getObject();
+                $formEvent->setEntity($validatedEntity);
+                $this->trigger($formEvent::EVENT_VALIDATE_SUCCESS, $formEvent));                                
+                $this->entityManager->persist($validatedEntity);
+                $this->entityManager->flush();
+            } else {
+                $this->trigger($formEvent::EVENT_VALIDATE_ERROR, $formEvent));
             }
         }
-        if ($backEndForm->template !== null){
-            $viewModel->setTemplate($backEndForm->template);
+        
+        if ($formEvent->template !== null){
+            $viewModel->setTemplate($formEvent->template);
         } else {
             $viewModel->setTemplate($this->template);
         }
         $viewModel->setVariable('form', $form);
         return $viewModel;
-    }
-
-    public function setController(DispatchableInterface $controller){
-
-        $this->controller = $controller;
-
-    }
-
-    public function getController(){
-        return $this->controller;
-    }
+    }      
 
     public function trigger($event, $argv){
 

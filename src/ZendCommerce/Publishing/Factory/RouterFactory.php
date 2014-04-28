@@ -1,5 +1,5 @@
 <?php
-namespace ZendCommerce\Publishing\Service;
+namespace ZendCommerce\Publishing\Factory;
 
 use Zend\Mvc\Service\RouterFactory as DefaultRouterFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
