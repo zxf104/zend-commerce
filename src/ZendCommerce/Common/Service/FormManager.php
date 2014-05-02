@@ -72,7 +72,7 @@ class FormManager implements EventManagerAwareInterface{
             $form->setData($postData);
             $this->trigger($formEvent::EVENT_VALIDATE_PRE, $formEvent);
             if ($form->isValid()){
-                $validatedEntity = $form->getObject();
+                $validatedEntity = $form->getObject();                
                 $formEvent->setEntity($validatedEntity);
                 $this->trigger($formEvent::EVENT_VALIDATE_SUCCESS, $formEvent));                                
                 $this->entityManager->persist($validatedEntity);

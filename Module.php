@@ -75,7 +75,7 @@ class Module
     /**
     * @toDo Set content blocs on render    
     */
-    public function setContentBlocks(MvcEvent $e){
+    public function insertContentBlocks(MvcEvent $e){
         
         
                 

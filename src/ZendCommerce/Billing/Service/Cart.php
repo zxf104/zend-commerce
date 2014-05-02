@@ -1,12 +1,5 @@
 <?php
 
-/*
-*
-* adicionarProduto(@CartItem)
-* removerProduto(@CartItem||@integer) #boolean
-* limparCart() #boolean
-*
-*/
 namespace ZendCommerce\Store\Service;
 
 class Cart{
@@ -56,7 +49,7 @@ class Cart{
     }
     /*
      * Remove um item do cart. Retorna true se o item foi removido e false se não foi
-     * @vStoreoja\Model\AbstractCartItem : int
+     * @Store\Model\AbstractCartItem : int
      * @return bool
      */
     public function removeItem($itemOrInt){
@@ -94,6 +87,15 @@ class Cart{
      */
     public function toArray(){
         return $this->session->getArrayCopy();
+    }
+    
+    public function toInvoice(){
+        
+        
+        
+        foreach($this->session as $cartItem){
+                        
+        }
     }
 
 }
