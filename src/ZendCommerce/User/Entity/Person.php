@@ -2,17 +2,12 @@
 
 namespace ZendCommerce\User\Entity;
 
-use ZfcUserDoctrineORM\Entity\User as UserBaseEntity;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-
+use ZendCommerce\Common\BaseEmbeddable;
 /**
- * Class User
- * @package User\Entity
- * @ORM\Entity
- * @ORM\Table(name="usuario")
+ * @ORM\Embeddable
  */
-class User extends UserBaseEntity{
+class Person extends BaseEmbeddable{
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -26,16 +21,9 @@ class User extends UserBaseEntity{
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $birthday
+    protected $birthday;
 
-    public function hasBillingInfo(){
-
-    }
-
-    public function hasAddress(){
+    public function isValid(){
 
     }
-
 }
-
-?>

@@ -5,7 +5,7 @@ namespace ZendCommerce\Billing\Service;
 use ZendCommerce\Billing\Model\AbstractCartItem;
 
 
-class Cart implements \Iterator, \Countable, \ArrayAccess{
+class CartService implements \Iterator, \Countable, \ArrayAccess{
 
     /**
      * @var \Zend\Session\Container;

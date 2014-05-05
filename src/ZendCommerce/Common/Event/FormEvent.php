@@ -4,7 +4,8 @@ namespace ZendCommerce\Common\Event;
 
 use Zend\EventManager\Event;
 use ZendCommerce\Common\AccessorsTrait;
-
+use Zend\Form\Form;
+use Zend\InputFilter\InputFilterInterface;
 
 class FormEvent extends Event{
     
@@ -23,7 +24,7 @@ class FormEvent extends Event{
     protected $form;
     
     /**
-     * @var InputFilter
+     * @var InputFilterInterface
      */
     protected $inputFilter;
     

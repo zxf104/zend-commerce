@@ -3,11 +3,12 @@
 namespace ZendCommerce\User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ZendCommerce\Common\BaseEmbeddable;
 
 /**
  * @ORM\Embeddable
  */
-class Addressable{
+class Address extends BaseEmbeddable{
 
     /**
      * @ORM\Column(type="text")
@@ -48,6 +49,10 @@ class Addressable{
      * @ORM\Column(type="text")
      */
     protected $complement;
+
+    public function isValid(){
+
+    }
 
 }
 

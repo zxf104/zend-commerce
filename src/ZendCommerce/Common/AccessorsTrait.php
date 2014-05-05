@@ -1,3 +1,7 @@
+<?php
+
+namespace ZendCommerce\Common;
+
 trait Accessors {
 
     public function __call($method, $args)
