@@ -6,13 +6,12 @@ namespace ZendCommerce\Common\Service;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
-use Zend\Mvc\Controller\Plugin\PluginInterface;
-use Zend\Stdlib\DispatchableInterface;
+use ZendCommerce\Common\Event\FormEvent;
 use Zend\View\Model\ViewModel;
-use ZendCommerce\Commom\Event\FormEvent;
+
 
 class FormManager implements EventManagerAwareInterface{
-        
+
     /**
      * @var
      */
@@ -28,12 +27,13 @@ class FormManager implements EventManagerAwareInterface{
         $this->entityManager = $em;
     }
 
-    /**     
-     * @param \ZendCommerce\Commom\Event\FormEvent $formEvent
+    /**
+     * @param \ZendCommerce\Common\Event\FormEvent $formEvent
      * @return \Zend\View\Model\ViewModel $viewModel
+     * @throws \Exception
      */
-    public function process(\ZendCommerce\Common\Event\FormEvent $formEvent){
-        
+    public function process(FormEvent $formEvent){
+
         $viewModel = new ViewModel();
         $entity = $formEvent->getEntity();
         $form = $formEvent->getForm();
@@ -42,9 +42,9 @@ class FormManager implements EventManagerAwareInterface{
         $filter = $formEvent->getFilter();
         $hydrator = $formEvent->getHydrator();
         $postData = $form->getPostData();
-        $entityClass = $formEvent->getEntityClass();       
-        
-        
+        $entityClass = $formEvent->getEntityClass();
+
+
         if (!$entity){
             if (!empty($id)){
                 if (method_exists($repository, 'find')){
@@ -55,41 +55,37 @@ class FormManager implements EventManagerAwareInterface{
                     throw new \Exception('Repository does not support \'find\' method');
                 }
             } else {
-            
+
                 if (!$entityClass){
                     throw new \Exception('Undefined Entity Class');
-                }            
-            $entity = new {$entityClass};
+                }
+                $entity = new $entityClass;
             }
-        } 
+        }
         $form->init();
-        $form->setHydrator($hydrator);        
+        $form->setHydrator($hydrator);
         $form->setInputFilter($filter);
         $form->bind($entity);
-        
-        
+
+
         if(count($postData) > 0){
             $form->setData($postData);
             $this->trigger($formEvent::EVENT_VALIDATE_PRE, $formEvent);
             if ($form->isValid()){
-                $validatedEntity = $form->getObject();                
+                $validatedEntity = $form->getObject();
                 $formEvent->setEntity($validatedEntity);
-                $this->trigger($formEvent::EVENT_VALIDATE_SUCCESS, $formEvent));                                
+                $this->trigger($formEvent::EVENT_VALIDATE_SUCCESS, $formEvent));
                 $this->entityManager->persist($validatedEntity);
                 $this->entityManager->flush();
             } else {
                 $this->trigger($formEvent::EVENT_VALIDATE_ERROR, $formEvent));
             }
         }
-        
-        if ($formEvent->template !== null){
-            $viewModel->setTemplate($formEvent->template);
-        } else {
-            $viewModel->setTemplate($this->template);
-        }
+
+        $viewModel->setTemplate($this->template);
         $viewModel->setVariable('form', $form);
         return $viewModel;
-    }      
+    }
 
     public function trigger($event, $argv){
 
@@ -100,6 +96,7 @@ class FormManager implements EventManagerAwareInterface{
 
     /**
      * Set the identifiers and the event manager
+     * @param EventManagerInterface $events
      * @return self
      */
     public function setEventManager(EventManagerInterface $events)

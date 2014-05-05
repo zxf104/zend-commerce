@@ -1,6 +1,6 @@
 <?php
 
-namespace ZendCommerce\Commom\Event;
+namespace ZendCommerce\Common\Event;
 
 use Zend\EventManager\Event;
 use ZendCommerce\Common\AccessorsTrait;
@@ -60,6 +60,9 @@ class FormEvent extends Event{
     /**
      * @var string
      */
-    protected $template;        
+    protected $template;
+
+
+
     
 }

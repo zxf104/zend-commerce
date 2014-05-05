@@ -26,7 +26,15 @@ class User extends UserBaseEntity{
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $birthday;
+    protected $birthday
+
+    public function hasBillingInfo(){
+
+    }
+
+    public function hasAddress(){
+
+    }
 
 }
 

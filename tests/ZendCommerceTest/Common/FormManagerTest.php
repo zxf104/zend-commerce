@@ -1,12 +1,12 @@
 <?php
-/*
- *
 
+/***
+ *
 namespace ZendCommerceTest\Common;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use ZendCommerce\Common\Service\FormManager;
-use ZendCommerce\Common\Model\FormOperation;
+use ZendCommerce\Common\Event\FormEvent;
 
 class FormManagerTest extends TestCase{
 
@@ -23,7 +23,7 @@ class FormManagerTest extends TestCase{
 
         $sm = \ZendCommerceTest\Util\ServiceManagerFactory::getServiceManager();
         $em = $sm->get('doctrine.entitymanager.orm_default');
-        $this->formOperationConfig = $this->getFormOperationConfig($sm, $em);
+        $this->formOperationConfig = $this->getFormEvent($sm, $em);
         $this->formManager = new FormManager($em);
         $this->formOperation = new FormOperation($this->formOperationConfig);
         $this->fakeController = $this->getMock('ZendCommerceTest\Util\Controller\PageTestController');
@@ -61,5 +61,6 @@ class FormManagerTest extends TestCase{
         );
     }
 
+
 }
-/*
+ * */

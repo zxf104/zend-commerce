@@ -1,14 +1,18 @@
 <?php
 
-namespace ZendCommerce\Store\Model;
+namespace ZendCommerce\Billing\Model;
 
 abstract class AbstractCartItem{
-    
-    abstract function setLineDescription();
-    abstract function setFollowLink();
-    abstract function setQuantity();
-    abstract function setUnitValue();
-    
+
+    abstract function setDescription($description);
+    abstract function setFollowLink($link);
+    abstract function setQuantity($qty);
+    abstract function setUnitValue($unitValue);
+
+    abstract function getDescription();
+    abstract function getFollowLink();
+    abstract function getQuantity();
+    abstract function getUnitValue();
 }
 
 ?>

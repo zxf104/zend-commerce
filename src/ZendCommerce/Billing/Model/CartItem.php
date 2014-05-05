@@ -1,6 +1,6 @@
 <?php
 
-namespace ZendCommerce\Store\Model;
+namespace ZendCommerce\Billing\Model;
 
 class CartItem extends AbstractCartItem{
 
@@ -13,13 +13,13 @@ class CartItem extends AbstractCartItem{
     protected $unitValue;
     
     
-    public function setLineDescription($line){
+    public function setDescription($line){
         $this->lineDescription = $line;
         return $this;
         
     }
     
-    public function getLineDescription(){
+    public function getDescription(){
         return $this->lineDescription;
         
     }
@@ -43,7 +43,7 @@ class CartItem extends AbstractCartItem{
     
     public function setUnitValue($unitValue){
         $this->unitValue = $unitValue;
-        reutnr $this;        
+        return $this;
     }
     
     public function getUnitValue(){

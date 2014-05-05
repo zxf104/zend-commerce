@@ -1,8 +1,11 @@
 <?php
 
-namespace ZendCommerce\Store\Service;
+namespace ZendCommerce\Billing\Service;
 
-class Cart{
+use ZendCommerce\Billing\Model\AbstractCartItem;
+
+
+class Cart implements \Iterator, \Countable, \ArrayAccess{
 
     /**
      * @var \Zend\Session\Container;
@@ -22,50 +25,8 @@ class Cart{
     public function __construct($config, $session){
         $this->session = $session;
         $this->config = $config;
+        $this->position = 0;
         return $this;
-    }
-
-    /*
-     * Adiciona item no cart e retorna um identificador para futuras operações
-     * @varStorea\Model\AbstractCartItem
-     * @return int
-     */
-    public function addItem (\ZendCommerce\Store\Model\AbstractCartItem $item){
-        $key = time();
-        $this->session[$key] = $item;
-        return $key;
-    }
-
-    /*
-     * @var $key integer
-     * @var $item Store\Model\AbstractCartItem
-     * @return self
-     */
-    public function updateItem ($key, \ZendCommerce\Store\Model\AbstractCartItem $item){
-        if ($this->session[$key] !== null){
-            $this->session[$key] = $item;
-        }
-        return $this;
-    }
-    /*
-     * Remove um item do cart. Retorna true se o item foi removido e false se não foi
-     * @Store\Model\AbstractCartItem : int
-     * @return bool
-     */
-    public function removeItem($itemOrInt){
-        if (is_integer($itemOrInt)){
-            unset($this->session[$itemOrInt]);
-            return true;
-        }
-        else if ($itemOrInt instanceof \ZendCommerce\Store\Model\AbstractCartItem){
-            foreach ($this->session as $key => $cartItem){
-                if ($itemOrInt == $cartItem){
-                    $this->session->offsetUnset($key);
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /*
@@ -74,29 +35,60 @@ class Cart{
      */
     public function clear(){
         $it = $this->session->getIterator();
-
-
         foreach ($it as $key => $value){
             unset($this->session[$key]);
         }
     }
 
-    /*
-     * Retorna array de items do cart
-     * @return array
-     */
-    public function toArray(){
+
+    public function next(){
+        ++$this->position;
+        return $this->current();
+    }
+
+    public function current(){
+        return $this->session[$this->position];
+    }
+
+    public function key(){
+        return $this->position;
+    }
+
+    public function rewind(){
+        $this->position = 0;
+    }
+
+    public function valid(){
+
+        return isset($this->session[$this->position]);
+    }
+
+    public function count(){
+        return count($this->session->getArrayCopy());
+    }
+
+    public function getArrayCopy(){
         return $this->session->getArrayCopy();
     }
-    
-    public function toInvoice(){
-        
-        
-        
-        foreach($this->session as $cartItem){
-                        
+
+    public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->session[count($this->session->getArrayCopy())] = $value;
+        } else {
+            $this->session[$offset] = $value;
         }
     }
+    public function offsetExists($offset) {
+        return isset($this->session[$offset]);
+    }
+    public function offsetUnset($offset) {
+        unset($this->session[$offset]);
+    }
+    public function offsetGet($offset) {
+        return isset($this->session[$offset]) ? $this->session[$offset] : null;
+    }
+
+
 
 }
 
