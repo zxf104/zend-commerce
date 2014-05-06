@@ -2,13 +2,13 @@
 
 namespace ZendCommerce\Common\Model;
 
-use ZendCommerce\Common\AccessorsTrait;
+use ZendCommerce\Common\DevMagic;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterInterface;
 
 class FormModel{
     
-    use AccessorsTrait;
+    use DevMagic;
 
     /**
      * @var Form
@@ -44,9 +44,6 @@ class FormModel{
      * @var object
      */
     protected $entity;
-
-
-    protected $toOne;
 
     /**
      * @var \Doctrine\ORM\EntityRepository

@@ -3,7 +3,8 @@ namespace ZendCommerce\Billing\Service;
 
 use ZendCommerce\Common\Model\FormModel;
 use ZendCommerce\Common\Controller\Plugin\FormManager;
-use ZendCommerce\Billing\Entity\PaymentEntity;
+use ZendCommerce\Billing\Entity\EmbbededPayment as Payment;
+use Doctrine\ORM\Repository as DoctrineRepository;
 
 class BillingService{
 
@@ -11,6 +12,9 @@ class BillingService{
 
     protected $config;
 
+    /**
+     * @var DoctrineRepository
+     */
     protected $invoiceRepository;
 
     protected $paymentRepository;
@@ -23,13 +27,9 @@ class BillingService{
         $this->invoiceRepository = $em->getRepository($config['repositories']['invoice']);
         $this->paymentRepository = $em->getRepository($config['repositories']['payment']);
 
-
-
     }
 
     public function getPaymentForm($stringOrInstance){
-
-        $this->registerFormCallbacks();
 
         if (!is_object($stringOrInstance)){
             $invoice = $this->repository->find($stringOrInstance);
@@ -38,17 +38,28 @@ class BillingService{
         }
 
         if ($invoice->hasPayment()){
-            $paymentEntity = $invoice->getPayment();
+            $payment = $invoice->getPayment();
         } else {
-            $paymentEntity = new PaymentEntity($invoice);
+            $payment = new Payment($invoice);
         }
 
         $hydrator = new DoctrineHydrator($this->getEntityManager());
+
+        if (!$filterName = $this->config['input_filters']['payment']){
+            throw new \Exception('O filtro que será utilizado neste formulário ainda não foi configurado! Tente novamente em breve.');
+        }
+        $inputFilter = new $filterName;
+
         $form = new FormModel();
         $form
             ->setHydrator($hydrator)
             ->setRepository($this->paymentRepository)
-            ->setEntity($paymentEntity);
+            ->setEntity($payment)
+            ->setInputFilter($inputFilter);
+    }
+
+    public function persistInvoice($invoice){
+        $this->invoiceRepository->persist($invoice);
     }
 
 }

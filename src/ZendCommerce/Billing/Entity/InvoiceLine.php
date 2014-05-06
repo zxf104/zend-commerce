@@ -31,7 +31,7 @@ class InvoiceLine{
     /**
      * @ORM\Embedded(class="ZendCommerce\Billing\Entity\EmbeddedMoney")
      */
-    protected $value;
+    protected $unitValue;
 
     /**
      * @var \ZendCommerce\Licensing\Entity\EmbeddedLicence
