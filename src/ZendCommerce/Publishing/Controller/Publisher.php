@@ -22,6 +22,7 @@ class Publisher extends AbstractActionController{
      */
     protected $pageRepository;
 
+    
     protected $blockRepository;
 
     /*
@@ -29,14 +30,18 @@ class Publisher extends AbstractActionController{
      */
     public function __construct($sl){
 
-        $config = $sl->get('Config'); // depends on config to set entity manager
+        $config = $sl->get('Config');
         $this->config = $config['Publishing']; // specific module config
         $this->entityManager = $sl->get('doctrine.entitymanager.orm_default'); // proxy to doctrine entity manager
         $this->repository = $sl->get('pagina.repository');
         return $this;
     }
 
-    public function viewAction(){
+    /**
+    *
+    *
+    */
+    public function viewPageAction(){
 
         $viewModel = new ViewModel();
 
@@ -59,6 +64,11 @@ class Publisher extends AbstractActionController{
         }
         return $viewModel;
     }
+    
+    public function viewBlockAction(){
+        
+    }
+    
 
     /*
      * Proxy to FormManager with all dependencies setted and FormOperation configured

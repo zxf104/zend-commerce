@@ -37,7 +37,7 @@ class InvoiceLine{
      * @var \ZendCommerce\Licensing\Entity\EmbeddedLicence
      * @ORM\Embedded(class="Billing\Entity\EmbeddedLicence")
      */
-    protected $licencia;
+    protected $licenca;
 
     /**
      * @var ArrayCollection

@@ -9,7 +9,7 @@ use ZendCommerce\Common\DevMagic;
 /**
  * @ORM\Embeddable
  */
-class EmbeddedPayment{
+class EmbbededPayment{
 
     use DevMagic;
 

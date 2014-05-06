@@ -1,13 +1,13 @@
 <?php
 
-namespace ZendCommerce\User\Entity;
+namespace ZendCommerce\Common\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use ZendCommerce\Common\BaseEmbeddable;
+use ZendCommerce\Common\Model\PersonInterface;
 /**
  * @ORM\Embeddable
  */
-class Person extends BaseEmbeddable{
+class PersonEntity extends BaseEmbeddable implements PersonInterface{
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -23,7 +23,5 @@ class Person extends BaseEmbeddable{
      */
     protected $birthday;
 
-    public function isValid(){
 
-    }
 }

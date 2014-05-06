@@ -4,11 +4,12 @@ namespace ZendCommerce\User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ZendCommerce\Common\BaseEmbeddable;
+use ZendCommerce\Common\Model\AddressInterface;
 
 /**
  * @ORM\Embeddable
  */
-class Address extends BaseEmbeddable{
+class AddressEmbeddable extends BaseEmbeddable implements AddressInterface{
 
     /**
      * @ORM\Column(type="text")
@@ -53,6 +54,8 @@ class Address extends BaseEmbeddable{
     public function isValid(){
 
     }
+
+
 
 }
 

@@ -3,8 +3,8 @@ namespace ZendCommerce\Billing\Service;
 
 use ZendCommerce\Common\Model\FormModel;
 use ZendCommerce\Common\Controller\Plugin\FormManager;
-use ZendCommerce\Billing\Entity\EmbbededPayment as Payment;
-use Doctrine\ORM\Repository as DoctrineRepository;
+use ZendCommerce\Billing\Entity\EmbbededPayment;
+use ZendCommerce\Billing\Repository\InvoiceRepository;
 
 class BillingService{
 
@@ -13,26 +13,27 @@ class BillingService{
     protected $config;
 
     /**
-     * @var DoctrineRepository
+     * @var InvoiceRepository;
      */
     protected $invoiceRepository;
-
-    protected $paymentRepository;
 
     public function __construct($em, $config){
 
         $this->entityManager = $em;
         $this->config = $config;
-
         $this->invoiceRepository = $em->getRepository($config['repositories']['invoice']);
-        $this->paymentRepository = $em->getRepository($config['repositories']['payment']);
 
     }
 
+    /**
+     * @param int|object : $stringOrInstance
+     * @return FormModel
+     * @throws \Exception
+     */
     public function getPaymentForm($stringOrInstance){
 
         if (!is_object($stringOrInstance)){
-            $invoice = $this->repository->find($stringOrInstance);
+            $invoice = $this->invoiceRepository->find($stringOrInstance);
         } else {
             $invoice = $stringOrInstance;
         }
@@ -40,7 +41,7 @@ class BillingService{
         if ($invoice->hasPayment()){
             $payment = $invoice->getPayment();
         } else {
-            $payment = new Payment($invoice);
+            $payment = new EmbbededPayment($invoice);
         }
 
         $hydrator = new DoctrineHydrator($this->getEntityManager());
@@ -53,13 +54,15 @@ class BillingService{
         $form = new FormModel();
         $form
             ->setHydrator($hydrator)
-            ->setRepository($this->paymentRepository)
+            ->setRepository($this->invoiceRepository)
             ->setEntity($payment)
             ->setInputFilter($inputFilter);
+
+        return $form;
     }
 
     public function persistInvoice($invoice){
-        $this->invoiceRepository->persist($invoice);
+        return $this->invoiceRepository->persist($invoice);
     }
 
 }
