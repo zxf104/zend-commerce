@@ -1,23 +1,15 @@
 <?php
 
-namespace ZendCommerce\Common\Event;
+namespace ZendCommerce\Common\Model;
 
-use Zend\EventManager\Event;
 use ZendCommerce\Common\AccessorsTrait;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterInterface;
 
-class FormEvent extends Event{
+class FormModel{
     
     use AccessorsTrait;
-    
-    /**#@+     
-     */
-    const EVENT_VALIDATE_PRE       = 'validate.pre';    
-    const EVENT_VALIDATE_ERROR = 'validate.error';
-    const EVENT_VALIDATE_SUCCESS = 'validate.success';
-    /**#@-*/
-    
+
     /**
      * @var Form
      */
@@ -53,6 +45,9 @@ class FormEvent extends Event{
      */
     protected $entity;
 
+
+    protected $toOne;
+
     /**
      * @var \Doctrine\ORM\EntityRepository
      */
@@ -62,8 +57,4 @@ class FormEvent extends Event{
      * @var string
      */
     protected $template;
-
-
-
-    
 }

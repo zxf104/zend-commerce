@@ -2,7 +2,7 @@
 
 namespace ZendCommerce\Common;
 
-trait Accessors {
+trait DevMagic {
 
     public function __call($method, $args)
     {

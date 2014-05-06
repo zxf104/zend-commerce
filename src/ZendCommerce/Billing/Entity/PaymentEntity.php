@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="pagamento")
  */
-class Payment{
+class PaymentEntity{
 
     /**
      * @ORM\Id

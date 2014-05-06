@@ -41,7 +41,7 @@ class Module
         
         
         $em->attach(MvcEvent::EVENT_DISPATCH, array($this, 'selectLayoutBasedOnRoute'));
-        $em->attach(MvcEvent::EVENT_FINISH, array($this, 'insertContentBlocks');
+        $em->attach(MvcEvent::EVENT_FINISH, array($this, 'insertContentBlocks'));
         
             
         $sem = \Zend\EventManager\StaticEventManager::getInstance();        

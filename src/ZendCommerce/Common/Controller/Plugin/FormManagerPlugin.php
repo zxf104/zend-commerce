@@ -1,16 +1,22 @@
 <?php
 
-namespace ZendCommerce\Common\Service;
+namespace ZendCommerce\Common\Controller\Plugin;
 
-
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\EventManager;
 use Zend\EventManager\EventManagerAwareInterface;
-use ZendCommerce\Common\Event\FormEvent;
+use ZendCommerce\Common\Model\FormModel;
 use Zend\View\Model\ViewModel;
 
+class FormManagerPlugin extends AbstractPlugin implements EventManagerAwareInterface{
 
-class FormManager implements EventManagerAwareInterface{
+    /**#@+
+     */
+    const EVENT_VALIDATE_PRE = 'validate.pre';
+    const EVENT_VALIDATE_ERROR = 'validate.error';
+    const EVENT_VALIDATE_SUCCESS = 'validate.success';
+    /**#@-*/
 
     /**
      * @var
@@ -28,21 +34,21 @@ class FormManager implements EventManagerAwareInterface{
     }
 
     /**
-     * @param \ZendCommerce\Common\Event\FormEvent $formEvent
+     * @param \ZendCommerce\Common\Model\FormModel $formEvent
      * @return \Zend\View\Model\ViewModel $viewModel
      * @throws \Exception
      */
-    public function process(FormEvent $formEvent){
+    public function process(FormModel $form){
 
         $viewModel = new ViewModel();
-        $entity = $formEvent->getEntity();
-        $form = $formEvent->getForm();
-        $id = $formEvent->getEntityId();
-        $repository = $formEvent->getRepository();
-        $filter = $formEvent->getFilter();
-        $hydrator = $formEvent->getHydrator();
+        $entity = $form->getEntity();
+        $form = $form->getForm();
+        $id = $form->getEntityId();
+        $repository = $form->getRepository();
+        $filter = $form->getFilter();
+        $hydrator = $form->getHydrator();
         $postData = $form->getPostData();
-        $entityClass = $formEvent->getEntityClass();
+        $entityClass = $form->getEntityClass();
 
 
         if (!$entity){
@@ -70,15 +76,15 @@ class FormManager implements EventManagerAwareInterface{
 
         if(count($postData) > 0){
             $form->setData($postData);
-            $this->trigger($formEvent::EVENT_VALIDATE_PRE, $formEvent);
+            $this->trigger($this::EVENT_VALIDATE_PRE, $formEvent);
             if ($form->isValid()){
                 $validatedEntity = $form->getObject();
-                $formEvent->setEntity($validatedEntity);
-                $this->trigger($formEvent::EVENT_VALIDATE_SUCCESS, $formEvent));
+                $form->setEntity($validatedEntity);
+                $this->trigger($this::EVENT_VALIDATE_SUCCESS, $formEvent);
                 $this->entityManager->persist($validatedEntity);
                 $this->entityManager->flush();
             } else {
-                $this->trigger($formEvent::EVENT_VALIDATE_ERROR, $formEvent));
+                $this->trigger($this::EVENT_VALIDATE_ERROR, $formEvent);
             }
         }
 
@@ -121,6 +127,6 @@ class FormManager implements EventManagerAwareInterface{
         }
         return $this->events;
     }
+
 }
 
-?>
