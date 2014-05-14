@@ -7,7 +7,7 @@ use ZendCommerce\Common\Model\PersonInterface;
 /**
  * @ORM\Embeddable
  */
-class PersonEntity extends BaseEmbeddable implements PersonInterface{
+class PersonEmbeddable extends BaseEmbeddable implements PersonInterface{
 
     /**
      * @ORM\Column(type="text", nullable=true)

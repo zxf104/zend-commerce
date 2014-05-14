@@ -17,16 +17,23 @@ class CartService implements \Iterator, \Countable, \ArrayAccess{
      */
     protected $config;
 
-    /*
-     * Constrói o cart
-     * @var Zend\Config\Config
-     * @var Zend\Session\Container
+    /**
+     * @var \ZendCommerce\Store\Service\ProductServiceInterface;
      */
-    public function __construct($config, $session){
+    protected $productService;
+
+    /**
+     * @param $config
+     * @param $session
+     * @param \ZendCommerce\Store\Service\ProductServiceInterface $productService
+     */
+    public function __construct($config, $session, \ZendCommerce\Store\Service\ProductServiceInterface $productService){
         $this->session = $session;
         $this->config = $config;
         $this->position = 0;
+        $this->productService = $productService;
         return $this;
+
     }
 
     /*
@@ -40,37 +47,95 @@ class CartService implements \Iterator, \Countable, \ArrayAccess{
         }
     }
 
+    /**
+     * @param int $productId
+     * @param null $optionId
+     * @param int $qty
+     * @param string $followLink
+     * @return bool
+     */
+
+    public function add($productId, $optionId = null, $qty, $followLink){
+
+        $itemDescription = '';
+        $product = null;
+
+        if ($productId === null){
+            return false;
+        } else {
+            $product = $this->productService->find($productId);
+        }
+
+        if ($followLink === null || $product === null){
+            return false;
+        }
+
+        $itemDescription .= $product->getCartDescription();
+
+        if ($optionId !== null && $product->hasOption($optionId)){
+            $option = $product->getOption($optionId);
+            $itemDescription .= $option->getCartDescription();
+        }
+
+        $item = new CartItem();
+        $item
+            ->setQuantity($qty)
+            ->setDescription($itemDescription)
+            ->setUnitValue($product->getUnitValue())
+            ->setFollowLink($followLink);
+
+        $this->session[] = $item;
+
+        return true;
+
+
+    }
+
+    /**
+     * @param int|string $token
+     * @param int $qty
+     * @return bool
+     */
+    public function update($token, $qty){
+
+        if(!isset($this->session[$token])){
+            return false;
+        }
+
+        $this->session[$token]->setQuantity($qty);
+
+        return true;
+
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getArrayCopy(){
+        return $this->session->getArrayCopy();
+    }
 
     public function next(){
         ++$this->position;
         return $this->current();
     }
-
     public function current(){
         return $this->session[$this->position];
     }
-
     public function key(){
         return $this->position;
     }
-
     public function rewind(){
         $this->position = 0;
     }
-
     public function valid(){
 
         return isset($this->session[$this->position]);
     }
-
     public function count(){
         return count($this->session->getArrayCopy());
     }
-
-    public function getArrayCopy(){
-        return $this->session->getArrayCopy();
-    }
-
     public function offsetSet($offset, $value) {
         if (is_null($offset)) {
             $this->session[count($this->session->getArrayCopy())] = $value;
@@ -87,7 +152,6 @@ class CartService implements \Iterator, \Countable, \ArrayAccess{
     public function offsetGet($offset) {
         return isset($this->session[$offset]) ? $this->session[$offset] : null;
     }
-
 
 
 }

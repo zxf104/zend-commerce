@@ -25,9 +25,7 @@ class CartTest extends TestCase{
     public function testAddCartItem(){
         $this->addRandomItemToCart();
         $this->addRandomItemToCart();
-
         $this->assertEquals(count($this->cartService), 2);
-
 
     }
 
@@ -45,6 +43,11 @@ class CartTest extends TestCase{
     }
 
     public function testClearCart(){
+        
+        $this->addRandomItemToCart();
+        $this->addRandomItemToCart();
+        $this->addRandomItemToCart();
+        $this->addRandomItemToCart();
         $this->cartService->clear();
         $this->assertEquals(count($this->cartService), 0);
     }

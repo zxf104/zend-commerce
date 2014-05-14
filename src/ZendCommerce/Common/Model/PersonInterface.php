@@ -16,8 +16,6 @@ interface PersonInterface{
 
     function setIdentityNo();
 
-
-
-
+    function isValid();
 
 }

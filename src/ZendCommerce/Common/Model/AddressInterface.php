@@ -15,6 +15,8 @@ interface AddressInterface{
 
     function getLineTwo();
 
+    function isValid();
+
 
 
 }

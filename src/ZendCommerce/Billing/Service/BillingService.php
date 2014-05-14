@@ -8,21 +8,26 @@ use ZendCommerce\Billing\Repository\InvoiceRepository;
 
 class BillingService{
 
-    protected $entityManager;
-
-    protected $config;
+    /**
+     * @var AuthenticationService
+     */
+    protected $authService;
 
     /**
-     * @var InvoiceRepository;
+     * @var ZendCommerce\Billing\Options\BillingOptionsInterface
+     */
+    protected $options;
+
+    /**
+     * @var Doctrine\ORM\EntityManager;
      */
     protected $invoiceRepository;
 
-    public function __construct($em, $config){
-
-        $this->entityManager = $em;
-        $this->config = $config;
-        $this->invoiceRepository = $em->getRepository($config['repositories']['invoice']);
-
+    public function __construct($invoiceRepository, $authService, \ZendCommerce\Billing\Options\BillingOptionsInterface $options)
+    {
+        $this->options = $options;
+        $this->invoiceRepository = $invoiceRepository;
+        $this->authService = $authService;
     }
 
     /**
@@ -30,7 +35,8 @@ class BillingService{
      * @return FormModel
      * @throws \Exception
      */
-    public function getPaymentForm($stringOrInstance){
+    public function getPaymentForm($stringOrInstance)
+    {
 
         if (!is_object($stringOrInstance)){
             $invoice = $this->invoiceRepository->find($stringOrInstance);
@@ -61,7 +67,8 @@ class BillingService{
         return $form;
     }
 
-    public function persistInvoice($invoice){
+    public function persistInvoice($invoice)
+    {
         return $this->invoiceRepository->persist($invoice);
     }
 

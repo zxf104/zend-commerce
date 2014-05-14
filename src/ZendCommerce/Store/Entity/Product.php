@@ -8,12 +8,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use League\Flysystem\File;
 use ZendCommerce\Common\Entity\BaseEntity;
 use ZendCommerce\Common\Entity\PublishableEntityInterface;
+use ZendCommerce\Common\Model\ProductInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="product")
  */
-class Product extends BaseEntity{
+class Product extends BaseEntity implements ProductInterface{
 
     /** @ORM\Column(type="text") */
     protected $title;
@@ -48,11 +49,7 @@ class Product extends BaseEntity{
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="OptionGroup", cascade={"all"})
-     * @ORM\JoinTable(name="product_option_groups",
-     *      joinColumns={@ORM\JoinColumn(name="product_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="option_group_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="OptionGroup", mappedBy="product")
      **/
     protected $optionGroups;
 
@@ -75,5 +72,35 @@ class Product extends BaseEntity{
      * )
      */
     protected $categories;
+
+    public function __construct(){
+        parent::__construct();
+        $this->keywords = new ArrayCollection();
+        $this->thumbs = new ArrayCollection();
+        $this->optionGroups = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->specifications = new ArrayCollection();
+    }
+
+    /**
+     * @TODO
+     */
+    public function getOption($optionOrId){
+
+    }
+
+    /**
+     * @TODO
+     */
+    public function hasOption(){
+
+    }
+
+    /**
+     * @TODO
+     */
+    public function getDescription(){
+
+    }
 
 }

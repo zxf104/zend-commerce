@@ -5,6 +5,7 @@ namespace ZendCommerce\User\Entity;
 use ZfcUserDoctrineORM\Entity\User as UserBaseEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use ZendCommerce\User\Model\UserInterface;
 
 /**
  * Class User
@@ -12,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  * @ORM\Table(name="usuario")
  */
-class UserEntity extends UserBaseEntity{
+class UserEntity extends UserBaseEntity implements UserInterface{
 
 
     /** @ORM\Embedded(class="Address") */

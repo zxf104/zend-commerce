@@ -26,6 +26,9 @@ class OptionGroup{
     /** @ORM\OneToMany(targetEntity="OptionGroupOption", mappedBy="") */
     protected $options;
 
+    /** @ORM\ManyToOne(targetEntity="Product", inversedBy="optionGroups")   */
+    protected $product;
+
 
 
 }

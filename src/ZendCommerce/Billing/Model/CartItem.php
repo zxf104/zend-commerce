@@ -26,10 +26,12 @@ class CartItem extends AbstractCartItem{
     
     public function setFollowLink($followLink){
         $this->followLink = $followLink;
+        return $this;
     }
     
     public function getFollowLink(){
         return $this->followLink;
+
     }
     
     public function setQuantity($qty){
