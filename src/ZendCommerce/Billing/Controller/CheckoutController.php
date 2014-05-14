@@ -10,6 +10,9 @@ use Zend\Authentication\AuthenticationService;
 class CheckoutController extends AbstractActionController
 {
 
+    protected $cartService;
+
+    protected $checkoutService;
 
     public function __construct();
 
@@ -37,6 +40,30 @@ class CheckoutController extends AbstractActionController
     }
 
     public function viewInvoiceAction(){
+
+        $viewModel = new ViewModel();
+        $invoiceId = $this->params('invoiceId', null);
+
+        if (null === $invoiceId){
+            throw new \ZendCommerce\Common\Exception\InvalidArgumentException();
+        }
+
+        $invoice = $this->checkoutService->getInvoiceRepository()->find($invoiceId);
+
+        if (null === $invoice){
+            $viewModel->setTemplate('checkout/invoice-not-found');
+        }
+        $viewModel->setVariable('invoice', $invoice);
+        return $viewModel;
+    }
+
+    public function processPaymentFormAction(){
+
+        $invoiceId = $this->params()->invoiceId();
+        $form = $this->checkoutService->getPaymentForm($invoiceId);
+        $inputFilter = $this->checkoutService->getPaymentInputFilter();
+        $data = $this->params()->fromPost();
+
 
 
 

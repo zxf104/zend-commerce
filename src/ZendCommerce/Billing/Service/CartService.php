@@ -3,6 +3,7 @@
 namespace ZendCommerce\Billing\Service;
 
 use ZendCommerce\Billing\Model\AbstractCartItem;
+use ZendCommerce\Billing\Model\CartItem;
 
 
 class CartService implements \Iterator, \Countable, \ArrayAccess{
@@ -96,16 +97,15 @@ class CartService implements \Iterator, \Countable, \ArrayAccess{
      * @param int $qty
      * @return bool
      */
-    public function update($token, $qty){
+    public function update($token, $qty)
+    {
 
-        if(!isset($this->session[$token])){
+        if(!$this->session[$token]){
             return false;
         }
 
         $this->session[$token]->setQuantity($qty);
-
         return true;
-
 
     }
 

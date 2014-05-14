@@ -87,20 +87,22 @@ class Product extends BaseEntity implements ProductInterface{
      */
     public function getOption($optionOrId){
 
+        return false;
+
     }
 
     /**
      * @TODO
      */
     public function hasOption(){
-
+        return false;
     }
 
     /**
      * @TODO
      */
-    public function getDescription(){
-
+    public function getCartDescription(){
+        return '';
     }
 
 }

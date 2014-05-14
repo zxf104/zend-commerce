@@ -6,7 +6,7 @@ use ZendCommerce\Common\Controller\Plugin\FormManager;
 use ZendCommerce\Billing\Entity\EmbbededPayment;
 use ZendCommerce\Billing\Repository\InvoiceRepository;
 
-class BillingService{
+class CheckoutService{
 
     /**
      * @var AuthenticationService
@@ -70,6 +70,14 @@ class BillingService{
     public function persistInvoice($invoice)
     {
         return $this->invoiceRepository->persist($invoice);
+    }
+
+    public function setInvoiceRepository($repository){
+        $this->invoiceRepository = $repository;
+    }
+
+    public function getInvoiceRepository(){
+        return $this->invoiceRepository;
     }
 
 }
